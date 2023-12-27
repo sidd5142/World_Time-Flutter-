@@ -14,12 +14,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-    if (ModalRoute.of(context)?.settings.arguments != null) {
-      data = ModalRoute.of(context)!.settings.arguments as Map;
-      print(data);
-    } else {
-      print("No data received");
-    }    print(data);
+    // if (ModalRoute.of(context)?.settings.arguments != null) {
+      data = data.isNotEmpty? data : ModalRoute.of(context)!.settings.arguments as Map;
+      // print(data);
+    // } else {
+    //   print("No data received");
+    // }    print(data);
 
     // set backgroung
     String bgimage = data['isDaytime'] ? 'https://e7.pngegg.com/pngimages/108/729/png-clipart-sky-sky-white-and-blue-sky-blue-atmosphere-thumbnail.png' : 'https://w7.pngwing.com/pngs/403/260/png-transparent-outer-space-sky-blue-night-star-purple-blue-other-thumbnail.png';
@@ -40,8 +40,16 @@ class _HomeState extends State<Home> {
                    child: Column(
                   children: [
                     TextButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/location');
+                        onPressed: () async {
+                         dynamic result = await Navigator.pushNamed(context, '/location');
+                         setState(() {
+                           data = {
+                             'time': result['time'],
+                             'location': result['location'],
+                             'isDaytime': result['isDaytime'],
+                             'flag': result['flag'],
+                           };
+                         });
                         },
                         icon: Icon(
                             Icons.edit_location,
